@@ -368,9 +368,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Display floating text on the specific wick
         createFloatingText(lamp, guestName || `Guest ${wickIndex + 1}`);
 
-        // Display floating guest notification banner
-        showGuestBanner(guestName, guestTitle);
-
         // Check if ceremony complete
         if (currentlyLitCount === totalWicks) {
             startCelebration();

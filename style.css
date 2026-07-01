@@ -99,7 +99,7 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 310px;
+    width: 350px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -159,15 +159,15 @@ body {
 }
 
 .guest-badge-num {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: rgba(255, 179, 71, 0.08);
     border: 1px solid rgba(255, 179, 71, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--gold-bright);
     transition: all 0.5s ease;
@@ -189,7 +189,7 @@ body {
 }
 
 .guest-details-box .g-name {
-    font-size: 0.95rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: #fff;
     transition: color 0.5s ease;
@@ -205,7 +205,7 @@ body {
 }
 
 .guest-details-box .g-title {
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     color: #888;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -377,6 +377,7 @@ body {
 
 /* --- GUEST DISPLAY BANNER --- */
 .guest-banner {
+    display: none !important;
     position: absolute;
     top: 60px;
     left: 50%;
