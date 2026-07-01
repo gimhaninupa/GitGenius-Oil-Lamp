@@ -424,23 +424,9 @@ document.addEventListener('DOMContentLoaded', () => {
         isRitualComplete = true;
         audio.playFinale();
 
-        // Phase 1: Altar vibrations / energy build-up
-        setTimeout(() => {
-            container.classList.add('shaking');
-            createDustClouds();
-        }, 1000);
-
-        // Phase 2: Power up all vault systems (lit-overlay)
-        setTimeout(() => {
-            litOverlay.classList.add('active');
-            altarDisk.classList.add('lit');
-        }, 3000);
-
-        // Phase 3: Radiant logo reveal
-        setTimeout(() => {
-            container.classList.remove('shaking');
-            revealContainer.classList.add('active');
-        }, 4500);
+        // Power up all vault systems smoothly
+        litOverlay.classList.add('active');
+        altarDisk.classList.add('lit');
     };
 
     // --- Particle Creators ---
