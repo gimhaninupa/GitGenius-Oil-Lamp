@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let litWicks = [];
     let ws = null;
     let isConnected = false;
+    let isTriggerLocked = false;
     const maxWicks = APP_CONFIG.totalWicks;
     maxWicksCount.textContent = maxWicks;
 
@@ -252,12 +253,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Touch to Light Button
     const handleTrigger = () => {
+        if (isTriggerLocked) return;
+
         const litCount = litWicks.length;
         if (litCount >= maxWicks) return;
 
         // Find next unlit guest
         const nextGuestIndex = guests.findIndex(g => !g.lit);
         if (nextGuestIndex === -1) return;
+
+        // Lock trigger synchronously immediately to block double taps
+        isTriggerLocked = true;
 
         const guest = guests[nextGuestIndex];
         guest.lit = true;
@@ -290,6 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Enable back after animation completes on display (approx 2.5 seconds)
         setTimeout(() => {
+            isTriggerLocked = false;
             updateUI();
         }, 2500);
     };
@@ -390,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 g.wickIndex = null;
             });
             litWicks = [];
+            isTriggerLocked = false;
             
             // Broadcast reset event using origin trigger
             saveState(true, 'controller_reset');
