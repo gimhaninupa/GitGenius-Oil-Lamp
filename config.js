@@ -26,7 +26,8 @@ const APP_CONFIG = {
     // WebSocket URL (used in network/Wi-Fi mode)
     getSocketUrl() {
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        return `${protocol}//${window.location.hostname}:${window.location.port || 8000}`;
+        const portPart = window.location.port ? `:${window.location.port}` : '';
+        return `${protocol}//${window.location.hostname}${portPart}`;
     }
 };
 
