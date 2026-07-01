@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Oil Lamp Ceremony Controller</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="controller-body">
+    <div class="controller-wrapper">
+        <header class="controller-header">
+            <div class="logo-area">
+                <img src="logo.png" alt="Logo" class="header-logo">
+                <h1>CEREMONY PANEL</h1>
+            </div>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-indicator offline"></span>
+                <span class="status-text">Offline Sync</span>
+            </div>
+        </header>
+
+        <main class="controller-main">
+            <!-- Left panel: Trigger & Next Guest -->
+            <section class="trigger-panel">
+                <div class="card active-guest-card">
+                    <h2>Active Guest</h2>
+                    <div class="guest-info-display" id="activeGuestDisplay">
+                        <div class="guest-name" id="currentGuestName">Hon. Chief Guest</div>
+                        <div class="guest-title" id="currentGuestTitle">Chief Guest</div>
+                    </div>
+                    <div class="wick-indicator-badge">
+                        Wick <span id="nextWickNumber">1</span> of <span id="maxWicksCount">8</span>
+                    </div>
+                </div>
+
+                <!-- Touch trigger flame area -->
+                <div class="trigger-container">
+                    <button class="trigger-button" id="triggerBtn" disabled>
+                        <div class="trigger-flame-icon">
+                            <div class="t-flame-core"></div>
+                            <div class="t-flame-glow"></div>
+                        </div>
+                        <span class="trigger-btn-text">TOUCH TO LIGHT</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right panel: Guest List Manager -->
+            <section class="guest-list-panel">
+                <div class="card list-card">
+                    <div class="card-header">
+                        <h2>Guest Lineup</h2>
+                        <button class="btn btn-secondary btn-sm" id="resetGuestsBtn">Reset Defaults</button>
+                    </div>
+                    <div class="guest-input-row">
+                        <input type="text" id="newGuestName" placeholder="Guest Name" aria-label="Guest Name">
+                        <input type="text" id="newGuestTitle" placeholder="Title/Designation (Optional)" aria-label="Guest Title">
+                        <button class="btn btn-primary" id="addGuestBtn">+</button>
+                    </div>
+                    <div class="guest-list-container">
+                        <ul class="guest-list" id="guestList">
+                            <!-- Populated dynamically via controller.js -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="controller-footer">
+            <div class="ceremony-actions">
+                <button class="btn btn-danger" id="resetCeremonyBtn">Reset Ceremony</button>
+                <button class="btn btn-glow" id="triggerFinaleBtn" disabled>Trigger Finale</button>
+            </div>
+            <div class="info-tag">
+                <span>V1.0 • Swipe or double-tap to adjust wicks if needed.</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Configuration Script -->
+    <script src="config.js?v=2"></script>
+    <!-- Controller Logic -->
+    <script src="controller.js?v=2"></script>
+</body>
+</html>

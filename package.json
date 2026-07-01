@@ -1,0 +1,15 @@
+{
+  "name": "gitgenius-oil-lamp",
+  "version": "1.0.0",
+  "description": "Virtual Oil Lamp Lighting Ceremony with Dual-Screen WebSocket Sync",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
