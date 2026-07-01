@@ -4,13 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const altarDisk = document.getElementById('altarDisk');
     const container = document.getElementById('ritualContainer');
     const litOverlay = document.getElementById('litOverlay');
-    const sourceTorch = document.getElementById('sourceTorch');
+    const leftSidebar = document.getElementById('leftSidebar');
+    const rightSidebar = document.getElementById('rightSidebar');
     const revealContainer = document.getElementById('revealContainer');
     const dustContainer = document.getElementById('dustContainer');
     const guestBanner = document.getElementById('guestBanner');
     const bannerGuestName = document.getElementById('bannerGuestName');
     const bannerGuestTitle = document.getElementById('bannerGuestTitle');
     const floatingNamesContainer = document.getElementById('floatingNamesContainer');
+
+    // Sequential Animation Queue state
+    const lightingQueue = [];
+    let isProcessingQueue = false;
     
     // Scale and positioning system for the 1920x1080 canvas
     const fitScreen = () => {
@@ -185,6 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
         guestBanner.classList.remove('active');
         dustContainer.innerHTML = '';
 
+        // Render sidebars with default lineup initially
+        renderSidebars();
+
         const center = { x: 400, y: 400 };
         const radius = 334;
 
@@ -220,8 +228,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Render sidebars dynamically based on configuration (5 wicks per side)
+    const renderSidebars = (guestsList) => {
+        leftSidebar.innerHTML = '';
+        rightSidebar.innerHTML = '';
+
+        const list = guestsList || APP_CONFIG.defaultGuests;
+        const mid = Math.ceil(totalWicks / 2);
+
+        for (let i = 0; i < totalWicks; i++) {
+            const guest = list[i] || { name: `Guest ${i + 1}`, title: 'Guest' };
+            const item = document.createElement('div');
+            item.className = 'sidebar-guest-item';
+            item.id = `sidebar-guest-${i}`;
+
+            item.innerHTML = `
+                <div class="guest-badge-num">${i + 1}</div>
+                <div class="guest-details-box">
+                    <span class="g-name">${guest.name}</span>
+                    <span class="g-title">${guest.title || ''}</span>
+                </div>
+            `;
+
+            if (i < mid) {
+                leftSidebar.appendChild(item);
+            } else {
+                rightSidebar.appendChild(item);
+            }
+        }
+    };
+
     // --- Traveling Spark Arc Animation ---
-    const triggerSparkAndLight = (wickIndex, guestName, guestTitle) => {
+    const triggerSparkAndLight = (wickIndex, guestName, guestTitle, callback) => {
         const lamp = document.getElementById(`lamp-${wickIndex}`);
         if (!lamp || lamp.classList.contains('lit') || inFlightWicks.has(wickIndex)) return;
 
@@ -231,12 +269,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Sound trigger warning context user-interaction bypass
         audio.init();
 
-        // 1. Get Source and Destination Coordinates
-        const sourceRect = sourceTorch.querySelector('.torch-flame').getBoundingClientRect();
+        // 1. Get Source (Center Altar Disk) and Destination Coordinates
+        const diskRect = altarDisk.getBoundingClientRect();
         const targetRect = lamp.getBoundingClientRect();
 
-        const startX = sourceRect.left + sourceRect.width / 2;
-        const startY = sourceRect.top + sourceRect.height / 2;
+        const startX = diskRect.left + diskRect.width / 2;
+        const startY = diskRect.top + diskRect.height / 2;
         const endX = targetRect.left + targetRect.width / 2;
         const endY = targetRect.top + targetRect.height / 2;
 
@@ -276,6 +314,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 inFlightWicks.delete(wickIndex);
                 // Spark arrived: Light the wick!
                 lightWick(wickIndex, guestName, guestTitle);
+
+                // Run queue callback if present
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }
         };
 
@@ -304,6 +347,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lamp.classList.add('lit');
         currentlyLitCount++;
+
+        // Add lit styling to corresponding sidebar guest item
+        const sidebarItem = document.getElementById(`sidebar-guest-${wickIndex}`);
+        if (sidebarItem) {
+            sidebarItem.classList.add('lit');
+        }
 
         // Add lit styling to Altar Disk on the first wick light
         if (currentlyLitCount === 1) {
@@ -335,6 +384,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lamp.classList.add('lit');
         currentlyLitCount++;
+
+        // Add lit styling to corresponding sidebar guest item
+        const sidebarItem = document.getElementById(`sidebar-guest-${wickIndex}`);
+        if (sidebarItem) {
+            sidebarItem.classList.add('lit');
+        }
 
         if (currentlyLitCount === 1) {
             altarDisk.classList.add('lit');
@@ -446,12 +501,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- State Synchronization (LocalStorage & WebSockets) ---
     
+    // --- Sequential Animation Queue Helpers ---
+    const queueWickLighting = (wickIndex, name, title) => {
+        // Avoid duplicate queueing
+        if (lightingQueue.some(item => item.wickIndex === wickIndex)) return;
+        
+        lightingQueue.push({ wickIndex, name, title });
+        processLightingQueue();
+    };
+
+    const processLightingQueue = () => {
+        if (isProcessingQueue) return;
+        if (lightingQueue.length === 0) {
+            isProcessingQueue = false;
+            return;
+        }
+
+        isProcessingQueue = true;
+        const nextWick = lightingQueue.shift();
+
+        // Check if already lit
+        const lamp = document.getElementById(`lamp-${nextWick.wickIndex}`);
+        if (lamp && !lamp.classList.contains('lit')) {
+            triggerSparkAndLight(nextWick.wickIndex, nextWick.name, nextWick.title, () => {
+                // Wait a short delay before firing the next spark
+                setTimeout(() => {
+                    isProcessingQueue = false;
+                    processLightingQueue();
+                }, 600);
+            });
+        } else {
+            isProcessingQueue = false;
+            processLightingQueue();
+        }
+    };
+
     // Unified display state synchronizer
     const syncDisplayState = (state) => {
         if (!state) return;
 
         // 1. Check for Reset Ceremony Trigger
         if (state.origin === 'controller_reset') {
+            lightingQueue.length = 0;
+            isProcessingQueue = false;
             buildAltar();
             return;
         }
@@ -462,21 +554,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Render sidebars with the latest list of guests
+        if (state.guests) {
+            renderSidebars(state.guests);
+        }
+
         // 3. Catch up light counts
         const targetCount = state.litCount || 0;
         if (targetCount > currentlyLitCount && !isRitualComplete) {
-            const diff = targetCount - currentlyLitCount;
-            if (diff > 1) {
-                // Instantly light previous wicks if we are catching up on reload/reconnect
+            // Check if initial reload catch up is needed
+            if (currentlyLitCount === 0 && targetCount > 1) {
                 state.litWicks.forEach(w => {
                     lightWickInstantly(w.wickIndex);
                 });
             } else {
-                // Spark animation for single incremental wick trigger
+                // Otherwise, queue them sequentially for smooth sparks
                 state.litWicks.forEach(w => {
                     const lamp = document.getElementById(`lamp-${w.wickIndex}`);
-                    if (lamp && !lamp.classList.contains('lit') && !inFlightWicks.has(w.wickIndex)) {
-                        triggerSparkAndLight(w.wickIndex, w.name, w.title);
+                    if (lamp && !lamp.classList.contains('lit')) {
+                        queueWickLighting(w.wickIndex, w.name, w.title);
                     }
                 });
             }
@@ -588,27 +684,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Direct single screen tap trigger
     singleScreenTriggerBtn.addEventListener('click', () => {
-        if (currentlyLitCount >= totalWicks || isRitualComplete) return;
+        const virtualLitCount = currentlyLitCount + lightingQueue.length + inFlightWicks.size;
+        if (virtualLitCount >= totalWicks || isRitualComplete) return;
 
-        const defaultGuestList = APP_CONFIG.defaultGuests;
-        const guest = defaultGuestList[currentlyLitCount % defaultGuestList.length];
-
-        triggerSparkAndLight(currentlyLitCount, guest.name, guest.title);
-
-        // Update local storage so any connected controller updates
         const stored = localStorage.getItem(APP_CONFIG.storageKey);
+        let guestsList = APP_CONFIG.defaultGuests;
         let litWicksList = [];
-        let guestsList = [];
         try {
             if (stored) {
                 const s = JSON.parse(stored);
+                if (s.guests && s.guests.length > 0) guestsList = s.guests;
                 litWicksList = s.litWicks || [];
-                guestsList = s.guests || [];
             }
         } catch (e) {}
 
+        const guest = guestsList[virtualLitCount % guestsList.length];
+
+        queueWickLighting(virtualLitCount, guest.name, guest.title);
+
         const newWick = {
-            wickIndex: currentlyLitCount,
+            wickIndex: virtualLitCount,
             name: guest.name,
             title: guest.title,
             timestamp: Date.now()
@@ -616,7 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
         litWicksList.push(newWick);
 
         localStorage.setItem(APP_CONFIG.storageKey, JSON.stringify({
-            litCount: currentlyLitCount + 1,
+            litCount: virtualLitCount + 1,
             litWicks: litWicksList,
             guests: guestsList,
             timestamp: Date.now(),
@@ -648,7 +743,8 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleDrawer(!isOpen);
         } else if (e.key === 'Enter' || e.key === ' ') {
             // Trigger next wick (Single screen keyboard override helper)
-            if (currentlyLitCount < totalWicks && !isRitualComplete) {
+            const virtualLitCount = currentlyLitCount + lightingQueue.length + inFlightWicks.size;
+            if (virtualLitCount < totalWicks && !isRitualComplete) {
                 singleScreenTriggerBtn.click();
             }
         } else if (e.key.toLowerCase() === 'r') {
