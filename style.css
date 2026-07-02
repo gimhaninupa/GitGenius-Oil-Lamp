@@ -922,6 +922,7 @@ body {
 /* Guest lineup form */
 .guest-input-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 16px;
 }
@@ -934,6 +935,7 @@ body {
     border-radius: 4px;
     font-size: 0.85rem;
     font-family: inherit;
+    min-width: 140px;
 }
 
 .guest-input-row input:focus {
@@ -1014,16 +1016,20 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    padding-right: 8px;
 }
 
 .guest-details .g-name {
     font-size: 0.9rem;
     font-weight: 600;
+    word-wrap: break-word;
 }
 
 .guest-details .g-title {
     font-size: 0.75rem;
     color: #777;
+    word-wrap: break-word;
 }
 
 .guest-item.lit .g-name { color: var(--gold-light); }
