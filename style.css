@@ -94,130 +94,7 @@ body {
     z-index: 2;
 }
 
-/* --- GUEST SIDEBARS (5 on each side) --- */
-.guest-sidebar {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 350px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    z-index: 10;
-    pointer-events: none;
-    transition: opacity 1.5s ease;
-}
 
-.left-sidebar {
-    left: 45px;
-}
-
-.right-sidebar {
-    right: 45px;
-}
-
-.sidebar-guest-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: rgba(10, 10, 15, 0.4);
-    border: 1px solid rgba(255, 179, 71, 0.08);
-    border-radius: 12px;
-    padding: 12px 18px;
-    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6), 0 4px 15px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    transform: translateX(0);
-    opacity: 0.8;
-}
-
-.left-sidebar .sidebar-guest-item {
-    border-left: 3px solid rgba(255, 179, 71, 0.15);
-}
-
-.right-sidebar .sidebar-guest-item {
-    border-right: 3px solid rgba(255, 179, 71, 0.15);
-    flex-direction: row-reverse;
-    text-align: right;
-}
-
-.sidebar-guest-item.lit {
-    background: rgba(25, 15, 5, 0.7);
-    border-color: rgba(255, 140, 0, 0.4);
-    opacity: 1;
-    box-shadow: 0 0 25px rgba(255, 140, 0, 0.3), inset 0 0 15px rgba(255, 140, 0, 0.15);
-}
-
-.left-sidebar .sidebar-guest-item.lit {
-    border-left-color: var(--gold-bright);
-    transform: translateX(8px) scale(1.02);
-}
-
-.right-sidebar .sidebar-guest-item.lit {
-    border-right-color: var(--gold-bright);
-    transform: translateX(-8px) scale(1.02);
-}
-
-.guest-badge-num {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 179, 71, 0.08);
-    border: 1px solid rgba(255, 179, 71, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--gold-bright);
-    transition: all 0.5s ease;
-    flex-shrink: 0;
-}
-
-.sidebar-guest-item.lit .guest-badge-num {
-    background: var(--gold-bright);
-    color: #000;
-    box-shadow: 0 0 12px var(--gold-bright);
-    border-color: #fff;
-}
-
-.guest-details-box {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0; /* allows text truncation if needed */
-}
-
-.guest-details-box .g-name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #fff;
-    transition: color 0.5s ease;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.sidebar-guest-item.lit .g-name {
-    color: var(--gold-bright);
-    text-shadow: 0 0 10px rgba(255, 179, 71, 0.4);
-}
-
-.guest-details-box .g-title {
-    font-size: 0.82rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: color 0.5s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.sidebar-guest-item.lit .g-title {
-    color: rgba(255, 230, 179, 0.8);
-}
 
 /* --- ALTAR SYSTEM --- */
 .altar-system {
@@ -359,21 +236,7 @@ body {
     z-index: 998;
 }
 
-/* Floating labels from lit wicks */
-.floating-wick-name {
-    position: absolute;
-    bottom: 95px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--gold-light);
-    letter-spacing: 1.5px;
-    white-space: nowrap;
-    text-shadow: 0 0 8px #000, 0 0 15px var(--gold-deep);
-    pointer-events: none;
-    animation: float-fade-up 2.5s forwards ease-out;
-}
+
 
 /* --- GUEST DISPLAY BANNER --- */
 .guest-banner {

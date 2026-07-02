@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const altarDisk = document.getElementById('altarDisk');
     const container = document.getElementById('ritualContainer');
     const litOverlay = document.getElementById('litOverlay');
-    const leftSidebar = document.getElementById('leftSidebar');
-    const rightSidebar = document.getElementById('rightSidebar');
     const revealContainer = document.getElementById('revealContainer');
     const dustContainer = document.getElementById('dustContainer');
     const guestBanner = document.getElementById('guestBanner');
@@ -190,9 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
         guestBanner.classList.remove('active');
         dustContainer.innerHTML = '';
 
-        // Render sidebars with default lineup initially
-        renderSidebars();
-
         const center = { x: 400, y: 400 };
         const radius = 334;
 
@@ -228,35 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Render sidebars dynamically based on configuration (5 wicks per side)
-    const renderSidebars = (guestsList) => {
-        leftSidebar.innerHTML = '';
-        rightSidebar.innerHTML = '';
 
-        const list = guestsList || APP_CONFIG.defaultGuests;
-        const mid = Math.ceil(totalWicks / 2);
-
-        for (let i = 0; i < totalWicks; i++) {
-            const guest = list[i] || { name: `Guest ${i + 1}`, title: 'Guest' };
-            const item = document.createElement('div');
-            item.className = 'sidebar-guest-item';
-            item.id = `sidebar-guest-${i}`;
-
-            item.innerHTML = `
-                <div class="guest-badge-num">${i + 1}</div>
-                <div class="guest-details-box">
-                    <span class="g-name">${guest.name}</span>
-                    <span class="g-title">${guest.title || ''}</span>
-                </div>
-            `;
-
-            if (i < mid) {
-                leftSidebar.appendChild(item);
-            } else {
-                rightSidebar.appendChild(item);
-            }
-        }
-    };
 
     // --- Traveling Spark Arc Animation ---
     const triggerSparkAndLight = (wickIndex, guestName, guestTitle, callback) => {
@@ -348,12 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lamp.classList.add('lit');
         currentlyLitCount++;
 
-        // Add lit styling to corresponding sidebar guest item
-        const sidebarItem = document.getElementById(`sidebar-guest-${wickIndex}`);
-        if (sidebarItem) {
-            sidebarItem.classList.add('lit');
-        }
-
         // Add lit styling to Altar Disk on the first wick light
         if (currentlyLitCount === 1) {
             altarDisk.classList.add('lit');
@@ -364,9 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Sound chime play
         audio.playChime(wickIndex);
-
-        // Display floating text on the specific wick
-        createFloatingText(lamp, guestName || `Guest ${wickIndex + 1}`);
 
         // Check if ceremony complete
         if (currentlyLitCount === totalWicks) {
@@ -382,12 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lamp.classList.add('lit');
         currentlyLitCount++;
 
-        // Add lit styling to corresponding sidebar guest item
-        const sidebarItem = document.getElementById(`sidebar-guest-${wickIndex}`);
-        if (sidebarItem) {
-            sidebarItem.classList.add('lit');
-        }
-
         if (currentlyLitCount === 1) {
             altarDisk.classList.add('lit');
         }
@@ -395,28 +347,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentlyLitCount === totalWicks) {
             startCelebration();
         }
-    };
-
-    const createFloatingText = (parentElement, text) => {
-        const label = document.createElement('div');
-        label.className = 'floating-wick-name';
-        label.textContent = text;
-        parentElement.appendChild(label);
-        
-        setTimeout(() => label.remove(), 2500);
-    };
-
-    const showGuestBanner = (name, title) => {
-        if (bannerTimeout) clearTimeout(bannerTimeout);
-
-        bannerGuestName.textContent = name || "Distinguished Guest";
-        bannerGuestTitle.textContent = (title || "Honoured Guest").toUpperCase();
-        guestBanner.classList.add('active');
-
-        // Stay on screen for 5 seconds, then fade out
-        bannerTimeout = setTimeout(() => {
-            guestBanner.classList.remove('active');
-        }, 5000);
     };
 
     // --- Finale Celebration / Logo Reveal ---
@@ -537,10 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Render sidebars with the latest list of guests
-        if (state.guests) {
-            renderSidebars(state.guests);
-        }
+
 
         // 3. Catch up light counts
         const targetCount = state.litCount || 0;
