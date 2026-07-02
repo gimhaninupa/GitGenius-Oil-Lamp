@@ -237,15 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lamp.classList.add('lit');
         currentlyLitCount++;
 
-        // Update litOverlay opacity dynamically to build illumination on the sides of the screen
-        const targetOpacity = 0.2 + 0.8 * (currentlyLitCount / totalWicks);
-        litOverlay.style.opacity = targetOpacity;
-
-        // Add lit styling to Altar Disk on the first wick light
-        if (currentlyLitCount === 1) {
-            altarDisk.classList.add('lit');
-        }
-
         // Particle explosion burst on wick
         createParticles(lamp, 25);
 
@@ -265,17 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lamp.classList.add('lit');
         currentlyLitCount++;
-
-        // Update litOverlay opacity dynamically to build illumination on the sides of the screen
-        const targetOpacity = 0.2 + 0.8 * (currentlyLitCount / totalWicks);
-        litOverlay.style.opacity = targetOpacity;
-        
-        const stationaryLitOverlay = document.getElementById('stationaryLitOverlay');
-        if (stationaryLitOverlay) stationaryLitOverlay.style.opacity = targetOpacity;
-
-        if (currentlyLitCount === 1) {
-            altarDisk.classList.add('lit');
-        }
 
         if (currentlyLitCount === totalWicks) {
             startCelebration();
