@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Remove lit class from disk & container resets
         altarDisk.classList.remove('lit');
-        litOverlay.classList.remove('active');
+        litOverlay.style.opacity = 0.2;
         container.classList.remove('shaking', 'destroyed');
         revealContainer.classList.remove('active');
         guestBanner.classList.remove('active');
@@ -315,6 +315,10 @@ document.addEventListener('DOMContentLoaded', () => {
         lamp.classList.add('lit');
         currentlyLitCount++;
 
+        // Update litOverlay opacity dynamically to build illumination on the sides of the screen
+        const targetOpacity = 0.2 + 0.8 * (currentlyLitCount / totalWicks);
+        litOverlay.style.opacity = targetOpacity;
+
         // Add lit styling to Altar Disk on the first wick light
         if (currentlyLitCount === 1) {
             altarDisk.classList.add('lit');
@@ -340,6 +344,10 @@ document.addEventListener('DOMContentLoaded', () => {
         lamp.classList.add('lit');
         currentlyLitCount++;
 
+        // Update litOverlay opacity dynamically to build illumination on the sides of the screen
+        const targetOpacity = 0.2 + 0.8 * (currentlyLitCount / totalWicks);
+        litOverlay.style.opacity = targetOpacity;
+
         if (currentlyLitCount === 1) {
             altarDisk.classList.add('lit');
         }
@@ -355,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.playFinale();
 
         // Power up all vault systems smoothly
-        litOverlay.classList.add('active');
+        litOverlay.style.opacity = 1.0;
         altarDisk.classList.add('lit');
     };
 
