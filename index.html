@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Oil Lamp Ceremony</title>
     <meta name="description" content="An interactive, premium virtual oil lamp lighting ceremony for events, supporting dual-screen tablet controls.">
-    <link rel="stylesheet" href="style.css?v=19">
+    <link rel="stylesheet" href="style.css?v=20">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
@@ -64,57 +64,12 @@
             <img src="logo.png" alt="Genius Logo" class="reveal-logo">
         </div>
 
-        <!-- Hidden Settings Control Panel (Toggled via 'C' key or gear icon) -->
-        <div class="settings-drawer" id="settingsDrawer">
-            <div class="drawer-header">
-                <h3>Ceremony Settings</h3>
-                <button class="drawer-close" id="closeDrawerBtn">✕</button>
-            </div>
-            <div class="drawer-body">
-                <div class="settings-group">
-                    <label>Sync Mode</label>
-                    <div class="sync-status-display">
-                        <span class="status-dot offline" id="displayConnDot"></span>
-                        <span id="displayConnText">Offline Sync (LocalStorage)</span>
-                    </div>
-                </div>
 
-                <div class="settings-group">
-                    <label for="wicksCountInput">Total Wicks</label>
-                    <input type="number" id="wicksCountInput" min="1" max="16" value="10">
-                </div>
-
-                <div class="settings-group checkbox">
-                    <input type="checkbox" id="soundToggle" checked>
-                    <label for="soundToggle">Enable Procedural Sound</label>
-                </div>
-
-                <div class="settings-group checkbox">
-                    <input type="checkbox" id="singleScreenToggle">
-                    <label for="singleScreenToggle">Single-Screen Mode (Touch to Light)</label>
-                </div>
-
-                <hr class="drawer-divider">
-
-                <div class="settings-actions">
-                    <button class="btn btn-secondary btn-full" id="settingsResetBtn">Reset Altar Ceremony</button>
-                    <button class="btn btn-danger btn-full" id="settingsForceFinaleBtn">Force Reveal Finale</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Interactive Single-Screen Overlay (Only visible when Single-Screen is enabled) -->
-        <div class="single-screen-trigger" id="singleScreenTriggerBtn">
-            <div class="trigger-label">TAP TO LIGHT NEXT WICK</div>
-        </div>
-
-        <!-- Subtle Settings Toggle Icon (in the corner, fades out after mouse idle) -->
-        <button class="settings-toggle-btn" id="openDrawerBtn" title="Open Settings (Press 'C')">⚙</button>
     </div>
 
     <!-- Configuration Script -->
-    <script src="config.js?v=19"></script>
+    <script src="config.js?v=20"></script>
     <!-- Display Logic -->
-    <script src="script.js?v=19"></script>
+    <script src="script.js?v=20"></script>
 </body>
 </html>

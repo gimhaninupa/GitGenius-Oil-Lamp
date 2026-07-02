@@ -32,17 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fitScreen();
 
     // Settings Drawer Elements
-    const settingsDrawer = document.getElementById('settingsDrawer');
-    const openDrawerBtn = document.getElementById('openDrawerBtn');
-    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
-    const wicksCountInput = document.getElementById('wicksCountInput');
-    const soundToggle = document.getElementById('soundToggle');
-    const singleScreenToggle = document.getElementById('singleScreenToggle');
-    const settingsResetBtn = document.getElementById('settingsResetBtn');
-    const settingsForceFinaleBtn = document.getElementById('settingsForceFinaleBtn');
-    const singleScreenTriggerBtn = document.getElementById('singleScreenTriggerBtn');
-    const displayConnDot = document.getElementById('displayConnDot');
-    const displayConnText = document.getElementById('displayConnText');
+    // Removed Settings Elements
 
     // State Variables
     let currentlyLitCount = 0;
@@ -490,8 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ws = new WebSocket(url);
 
         ws.onopen = () => {
-            displayConnDot.className = 'status-dot online';
-            displayConnText.textContent = 'WiFi Sync Online';
+            console.log('WiFi Sync Online');
             // Request the latest state as soon as we connect/reconnect
             ws.send(JSON.stringify({ type: 'request_state' }));
         };
@@ -509,141 +498,12 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         ws.onclose = () => {
-            displayConnDot.className = 'status-dot offline';
-            displayConnText.textContent = 'Offline (Attempting Reconnect...)';
+            console.log('Offline (Attempting Reconnect...)');
             setTimeout(connectWebSocket, 4000); // retry connect
         };
     };
 
-    // --- Settings Panel Interactions ---
-
-    const toggleDrawer = (open) => {
-        if (open) {
-            settingsDrawer.classList.add('open');
-        } else {
-            settingsDrawer.classList.remove('open');
-        }
-    };
-
-    openDrawerBtn.addEventListener('click', () => toggleDrawer(true));
-    closeDrawerBtn.addEventListener('click', () => toggleDrawer(false));
-
-    // Wicks Count adjustment
-    wicksCountInput.addEventListener('change', (e) => {
-        let count = parseInt(e.target.value, 10);
-        if (isNaN(count) || count < 1) count = 8;
-        if (count > 16) count = 16;
-        e.target.value = count;
-        
-        totalWicks = count;
-        APP_CONFIG.totalWicks = count;
-        buildAltar();
-        
-        // Reset local storage state to match new wicks
-        localStorage.removeItem(APP_CONFIG.storageKey);
-    });
-
-    // Sound toggle
-    soundToggle.addEventListener('change', (e) => {
-        soundEnabled = e.target.checked;
-        APP_CONFIG.soundEnabled = soundEnabled;
-    });
-
-    // Single screen direct touch control toggle
-    singleScreenToggle.addEventListener('change', (e) => {
-        singleScreenMode = e.target.checked;
-        if (singleScreenMode) {
-            singleScreenTriggerBtn.classList.add('visible');
-        } else {
-            singleScreenTriggerBtn.classList.remove('visible');
-        }
-    });
-
-    // Direct single screen tap trigger
-    singleScreenTriggerBtn.addEventListener('click', () => {
-        const virtualLitCount = currentlyLitCount + lightingQueue.length;
-        if (virtualLitCount >= totalWicks || isRitualComplete) return;
-
-        const stored = localStorage.getItem(APP_CONFIG.storageKey);
-        let guestsList = APP_CONFIG.defaultGuests;
-        let litWicksList = [];
-        try {
-            if (stored) {
-                const s = JSON.parse(stored);
-                if (s.guests && s.guests.length > 0) guestsList = s.guests;
-                litWicksList = s.litWicks || [];
-            }
-        } catch (e) {}
-
-        const guest = guestsList[virtualLitCount % guestsList.length];
-
-        queueWickLighting(virtualLitCount, guest.name, guest.title);
-
-        const newWick = {
-            wickIndex: virtualLitCount,
-            name: guest.name,
-            title: guest.title,
-            timestamp: Date.now()
-        };
-        litWicksList.push(newWick);
-
-        localStorage.setItem(APP_CONFIG.storageKey, JSON.stringify({
-            litCount: virtualLitCount + 1,
-            litWicks: litWicksList,
-            guests: guestsList,
-            timestamp: Date.now(),
-            origin: 'display'
-        }));
-    });
-
-    // Force finale trigger
-    settingsForceFinaleBtn.addEventListener('click', () => {
-        if (!isRitualComplete) {
-            toggleDrawer(false);
-            startCelebration();
-        }
-    });
-
-    // Manual reset altar
-    settingsResetBtn.addEventListener('click', () => {
-        if (confirm("Reset the ceremony? This will extinguish all flames.")) {
-            buildAltar();
-            localStorage.removeItem(APP_CONFIG.storageKey);
-        }
-    });
-
-    // --- Key Bindings & Mouse Fading ---
-    window.addEventListener('keydown', (e) => {
-        if (e.key.toLowerCase() === 'c') {
-            // Toggle drawer
-            const isOpen = settingsDrawer.classList.contains('open');
-            toggleDrawer(!isOpen);
-        } else if (e.key === 'Enter' || e.key === ' ') {
-            // Trigger next wick (Single screen keyboard override helper)
-            const virtualLitCount = currentlyLitCount + lightingQueue.length;
-            if (virtualLitCount < totalWicks && !isRitualComplete) {
-                singleScreenTriggerBtn.click();
-            }
-        } else if (e.key.toLowerCase() === 'r') {
-            // Quick Reset shortcut
-            settingsResetBtn.click();
-        }
-    });
-
-    // Fade out settings button on mouse idle for clean display
-    let mouseTimer = null;
-    window.addEventListener('mousemove', () => {
-        openDrawerBtn.style.opacity = '1';
-        clearTimeout(mouseTimer);
-        mouseTimer = setTimeout(() => {
-            if (!settingsDrawer.classList.contains('open')) {
-                openDrawerBtn.style.opacity = '0.1';
-            }
-        }, 3000);
-    });
-
     // --- Initialization ---
-    wicksCountInput.value = totalWicks;
     buildAltar();
     connectWebSocket();
 
