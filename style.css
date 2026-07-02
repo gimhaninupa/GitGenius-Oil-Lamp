@@ -52,6 +52,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     z-index: 10;
 }
 
@@ -84,20 +85,16 @@ body {
     z-index: -1;
 }
 
-.gitgenius-text {
-    font-family: 'Cinzel', serif;
-    font-weight: 800;
-    font-size: 140px;
-    color: #ffd700;
-    text-transform: uppercase;
-    letter-spacing: 15px;
+.gitgenius-logo-img {
+    width: 1300px;
+    max-width: 90%;
     opacity: 0;
-    transform: scale(0.8);
-    transition: opacity 3s ease 1s, transform 5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
-    text-shadow: 0 0 40px rgba(255, 160, 0, 0.8), 0 0 80px rgba(255, 120, 0, 0.4), 0 0 120px rgba(255, 50, 0, 0.3);
+    transform: scale(0.7);
+    transition: opacity 3s ease 2.2s, transform 5s cubic-bezier(0.2, 0.8, 0.2, 1) 1.8s;
+    filter: drop-shadow(0 0 40px rgba(255, 180, 0, 0.4));
 }
 
-.deep-background.reveal .gitgenius-text {
+.deep-background.reveal .gitgenius-logo-img {
     opacity: 1;
     transform: scale(1);
 }
