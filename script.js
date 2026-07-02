@@ -270,10 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetOpacity = 0.2 + 0.8 * (currentlyLitCount / totalWicks);
         litOverlay.style.opacity = targetOpacity;
         
-        const gateLeftLit = document.getElementById('gateLeftLit');
-        const gateRightLit = document.getElementById('gateRightLit');
-        if (gateLeftLit) gateLeftLit.style.opacity = targetOpacity;
-        if (gateRightLit) gateRightLit.style.opacity = targetOpacity;
+        const stationaryLitOverlay = document.getElementById('stationaryLitOverlay');
+        if (stationaryLitOverlay) stationaryLitOverlay.style.opacity = targetOpacity;
 
         if (currentlyLitCount === 1) {
             altarDisk.classList.add('lit');
@@ -291,23 +289,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Power up all vault systems and central logo smoothly
         litOverlay.style.opacity = 1.0;
-        const gateLeftLit = document.getElementById('gateLeftLit');
-        const gateRightLit = document.getElementById('gateRightLit');
-        if (gateLeftLit) gateLeftLit.style.opacity = 1.0;
-        if (gateRightLit) gateRightLit.style.opacity = 1.0;
+        const stationaryLitOverlay = document.getElementById('stationaryLitOverlay');
+        if (stationaryLitOverlay) stationaryLitOverlay.style.opacity = 1.0;
         altarDisk.classList.add('lit');
 
-        // 2. Wait 2.5 seconds for the logo light-up effect, then split the gate!
+        // 2. Wait 2.5 seconds for the logo light-up effect, then split the massive altar gate!
         setTimeout(() => {
-            const gateLeft = document.getElementById('gateLeft');
-            const gateRight = document.getElementById('gateRight');
-            
-            if (gateLeft && gateRight) {
-                gateLeft.classList.add('open');
-                gateRight.classList.add('open');
+            const mainGate = document.getElementById('altarGate');
+            if (mainGate && !document.getElementById('altarGateRight')) {
+                // Clone the entire massive circular gate (including all lit lamps)
+                const rightGate = mainGate.cloneNode(true);
+                rightGate.id = 'altarGateRight';
                 
-                // Reveal the deep background text
-                document.getElementById('deepBackground').classList.add('reveal');
+                // Add to DOM
+                mainGate.parentNode.insertBefore(rightGate, mainGate.nextSibling);
+                
+                // Use a tiny 50ms delay so browser renders the clone before animating
+                setTimeout(() => {
+                    mainGate.classList.add('left-split', 'open');
+                    rightGate.classList.add('right-split', 'open');
+                    
+                    // Blur the stationary background
+                    document.getElementById('stationaryBg').classList.add('blur-active');
+                    
+                    // Reveal the deep background text
+                    document.getElementById('deepBackground').classList.add('reveal');
+                }, 50);
             }
         }, 2500);
     };
