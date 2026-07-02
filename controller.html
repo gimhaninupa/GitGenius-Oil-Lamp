@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Oil Lamp Ceremony Controller</title>
-    <link rel="stylesheet" href="style.css?v=20">
+    <link rel="stylesheet" href="style.css?v=21">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
@@ -23,8 +23,8 @@
         </header>
 
         <main class="controller-main">
-            <!-- Left panel: Trigger & Next Guest -->
-            <section class="trigger-panel">
+            <!-- Left panel: Next Guest -->
+            <section class="left-panel">
                 <div class="card active-guest-card">
                     <h2>Active Guest</h2>
                     <div class="guest-info-display" id="activeGuestDisplay">
@@ -36,20 +36,20 @@
                     </div>
                 </div>
 
-                <!-- Touch trigger flame area -->
+            </section>
+
+            <!-- Center panel: Touch trigger -->
+            <section class="center-panel">
                 <div class="trigger-container">
                     <button class="trigger-button" id="triggerBtn" disabled>
-                        <div class="trigger-flame-icon">
-                            <div class="t-flame-core"></div>
-                            <div class="t-flame-glow"></div>
-                        </div>
+                        <div class="trigger-logo-icon"></div>
                         <span class="trigger-btn-text">TOUCH TO LIGHT</span>
                     </button>
                 </div>
             </section>
 
             <!-- Right panel: Guest List Manager -->
-            <section class="guest-list-panel">
+            <section class="right-panel">
                 <div class="card list-card">
                     <div class="card-header">
                         <h2>Guest Lineup</h2>
@@ -81,8 +81,8 @@
     </div>
 
     <!-- Configuration Script -->
-    <script src="config.js?v=20"></script>
+    <script src="config.js?v=21"></script>
     <!-- Controller Logic -->
-    <script src="controller.js?v=20"></script>
+    <script src="controller.js?v=21"></script>
 </body>
 </html>
