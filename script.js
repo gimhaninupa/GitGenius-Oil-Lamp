@@ -207,8 +207,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Calculate absolute offsets relative to 1920x1080 parent
             // .altar-system starts at left: 560px, top: 140px
-            const xOffset = 560 + left - 60;
-            const yOffset = 140 + top - 60;
+            const xOffset = 560 + left - 90;
+            const yOffset = 140 + top - 90;
 
             lamp.innerHTML = `
                 <div class="wick-glow" style="background-position: -${xOffset}px -${yOffset}px;"></div>
