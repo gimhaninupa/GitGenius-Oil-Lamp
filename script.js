@@ -187,6 +187,19 @@ document.addEventListener('DOMContentLoaded', () => {
         guestBanner.classList.remove('active');
         dustContainer.innerHTML = '';
 
+        // Reset door split elements
+        const rightDoor = document.getElementById('rightDoor');
+        if (rightDoor) rightDoor.remove();
+
+        const mainDoor = document.getElementById('mainDoor');
+        if (mainDoor) {
+            mainDoor.style.clipPath = 'none';
+            mainDoor.classList.remove('door-split-left');
+        }
+        
+        const deepBg = document.getElementById('deepBackground');
+        if (deepBg) deepBg.classList.remove('reveal');
+
         const center = { x: 400, y: 400 };
         const radius = 334;
 
@@ -281,9 +294,36 @@ document.addEventListener('DOMContentLoaded', () => {
         isRitualComplete = true;
         audio.playFinale();
 
-        // Power up all vault systems smoothly
+        // 1. Power up all vault systems and central logo smoothly
         litOverlay.style.opacity = 1.0;
         altarDisk.classList.add('lit');
+
+        // 2. Wait 2.5 seconds for the logo light-up effect, then split the gate!
+        setTimeout(() => {
+            const mainDoor = document.getElementById('mainDoor');
+            if (mainDoor && !document.getElementById('rightDoor')) {
+                // Clone the door
+                const rightDoor = mainDoor.cloneNode(true);
+                rightDoor.id = 'rightDoor';
+                
+                // Set precise masks to split them exactly down the middle (vertical line)
+                mainDoor.style.clipPath = 'polygon(0 0, 50% 0, 50% 100%, 0 100%)';
+                rightDoor.style.clipPath = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%)';
+                
+                // Add to DOM right after mainDoor
+                mainDoor.parentNode.insertBefore(rightDoor, mainDoor.nextSibling);
+                
+                // Trigger the CSS translation slide
+                // Use a tiny 50ms delay so the browser parses the DOM clone before animating
+                setTimeout(() => {
+                    mainDoor.classList.add('door-split-left');
+                    rightDoor.classList.add('door-split-right');
+                    
+                    // Reveal the deep background text
+                    document.getElementById('deepBackground').classList.add('reveal');
+                }, 50);
+            }
+        }, 2500);
     };
 
     // --- Particle Creators ---

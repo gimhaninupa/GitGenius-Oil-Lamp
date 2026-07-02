@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Oil Lamp Ceremony</title>
     <meta name="description" content="An interactive, premium virtual oil lamp lighting ceremony for events, supporting dual-screen tablet controls.">
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
@@ -13,11 +13,17 @@
 <body>
     <div class="main-wrapper display-wrapper">
         <div class="ritual-container" id="ritualContainer">
+            <!-- Deep background revealed when doors open -->
+            <div class="deep-background" id="deepBackground">
+                <h1 class="gitgenius-text">GitGenius</h1>
+            </div>
+
             <!-- Ambient Background overlay -->
             <div class="ambient-vignette"></div>
 
-            <!-- Full Screen Lit Overlay for Finale Activation -->
-            <div class="lit-overlay" id="litOverlay"></div>
+            <div class="door-wrapper" id="mainDoor">
+                <!-- Full Screen Lit Overlay for Finale Activation -->
+                <div class="lit-overlay" id="litOverlay"></div>
 
 
 
@@ -46,9 +52,10 @@
             <!-- Floating Names Container (text floats up from wicks) -->
             <div class="floating-names-container" id="floatingNamesContainer"></div>
 
-            <!-- Destruction/Celebration overlays -->
-            <div class="destruction-overlay" id="destructionOverlay"></div>
-            <div class="dust-container" id="dustContainer"></div>
+                <!-- Destruction/Celebration overlays -->
+                <div class="destruction-overlay" id="destructionOverlay"></div>
+                <div class="dust-container" id="dustContainer"></div>
+            </div>
         </div>
 
         <!-- The Reveal Container (Outside the ritual container to avoid filters) -->
@@ -106,8 +113,8 @@
     </div>
 
     <!-- Configuration Script -->
-    <script src="config.js?v=17"></script>
+    <script src="config.js?v=18"></script>
     <!-- Display Logic -->
-    <script src="script.js?v=17"></script>
+    <script src="script.js?v=18"></script>
 </body>
 </html>
