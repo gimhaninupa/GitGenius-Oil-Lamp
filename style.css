@@ -80,8 +80,8 @@ body {
     z-index: 2;
     pointer-events: none;
     filter: brightness(1.25) contrast(1.1) saturate(1.3);
-    mask-image: radial-gradient(circle at center, transparent 390px, black 400px);
-    -webkit-mask-image: radial-gradient(circle at center, transparent 390px, black 400px);
+    mask-image: radial-gradient(circle at center, transparent 420px, black 430px);
+    -webkit-mask-image: radial-gradient(circle at center, transparent 420px, black 430px);
 }
 
 .lit-overlay.active {
@@ -160,7 +160,7 @@ body {
     opacity: 0;
     transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
-    box-shadow: 0 0 35px rgba(255, 140, 0, 0.6), inset 0 0 15px rgba(255, 140, 0, 0.3);
+    clip-path: circle(40% at center);
 }
 
 .lamp.lit .wick-glow {
@@ -168,16 +168,8 @@ body {
 }
 
 .wall-glow {
-    position: absolute;
-    width: 150px; height: 150px;
-    background: radial-gradient(circle at center, rgba(255, 115, 0, 0.35) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 1.2s ease;
-    pointer-events: none;
-    z-index: 2;
+    display: none !important;
 }
-
-.lamp.lit .wall-glow { opacity: 1; }
 
 .flame {
     display: none !important;
