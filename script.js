@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let singleScreenMode = false;
     let ws = null;
     let bannerTimeout = null;
-    const inFlightWicks = new Set();
 
     // --- Sound Synthesis Class ---
     class SoundSynth {
@@ -225,87 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // --- Traveling Spark Arc Animation ---
-    const triggerSparkAndLight = (wickIndex, guestName, guestTitle, callback) => {
-        const lamp = document.getElementById(`lamp-${wickIndex}`);
-        if (!lamp || lamp.classList.contains('lit') || inFlightWicks.has(wickIndex)) return;
 
-        // Prevent duplicate animation sparks
-        inFlightWicks.add(wickIndex);
-
-        // Sound trigger warning context user-interaction bypass
-        audio.init();
-
-        // 1. Get Source (Center Altar Disk) and Destination Coordinates
-        const diskRect = altarDisk.getBoundingClientRect();
-        const targetRect = lamp.getBoundingClientRect();
-
-        const startX = diskRect.left + diskRect.width / 2;
-        const startY = diskRect.top + diskRect.height / 2;
-        const endX = targetRect.left + targetRect.width / 2;
-        const endY = targetRect.top + targetRect.height / 2;
-
-        // 2. Spawn traveling spark element
-        const spark = document.createElement('div');
-        spark.className = 'traveling-spark';
-        document.body.appendChild(spark);
-
-        const duration = 1200; // 1.2s travel time
-        const startTime = performance.now();
-
-        // High peak parabolic trajectory (curve upward)
-        const ctrlX = (startX + endX) / 2;
-        const ctrlY = Math.min(startY, endY) - 220;
-
-        // Animate using quadratic Bezier curve
-        const animate = (time) => {
-            const elapsed = time - startTime;
-            const t = Math.min(elapsed / duration, 1);
-
-            // Bezier math
-            const x = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * ctrlX + t * t * endX;
-            const y = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * ctrlY + t * t * endY;
-
-            spark.style.left = `${x}px`;
-            spark.style.top = `${y}px`;
-
-            // Spawning trails
-            if (Math.random() < 0.3) {
-                createTrailParticle(x, y);
-            }
-
-            if (t < 1) {
-                requestAnimationFrame(animate);
-            } else {
-                spark.remove();
-                inFlightWicks.delete(wickIndex);
-                // Spark arrived: Light the wick!
-                lightWick(wickIndex, guestName, guestTitle);
-
-                // Run queue callback if present
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }
-        };
-
-        requestAnimationFrame(animate);
-    };
-
-    const createTrailParticle = (x, y) => {
-        const trail = document.createElement('div');
-        trail.className = 'spark-trail';
-        trail.style.left = `${x}px`;
-        trail.style.top = `${y}px`;
-        document.body.appendChild(trail);
-
-        const anim = trail.animate([
-            { transform: 'translate(-50%, -50%) scale(1)', opacity: 0.8 },
-            { transform: 'translate(-50%, -20px) scale(0.1)', opacity: 0 }
-        ], { duration: 600, easing: 'ease-out' });
-
-        anim.onfinish = () => trail.remove();
-    };
 
     // --- Wick Lighting Ceremony ---
     const lightWick = (wickIndex, guestName, guestTitle) => {
@@ -444,13 +363,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if already lit
         const lamp = document.getElementById(`lamp-${nextWick.wickIndex}`);
         if (lamp && !lamp.classList.contains('lit')) {
-            triggerSparkAndLight(nextWick.wickIndex, nextWick.name, nextWick.title, () => {
-                // Wait a short delay before firing the next spark
-                setTimeout(() => {
-                    isProcessingQueue = false;
-                    processLightingQueue();
-                }, 600);
-            });
+            lightWick(nextWick.wickIndex, nextWick.name, nextWick.title);
+            
+            // Wait a short delay before letting the next wick light up to keep it smooth
+            setTimeout(() => {
+                isProcessingQueue = false;
+                processLightingQueue();
+            }, 300);
         } else {
             isProcessingQueue = false;
             processLightingQueue();
@@ -602,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Direct single screen tap trigger
     singleScreenTriggerBtn.addEventListener('click', () => {
-        const virtualLitCount = currentlyLitCount + lightingQueue.length + inFlightWicks.size;
+        const virtualLitCount = currentlyLitCount + lightingQueue.length;
         if (virtualLitCount >= totalWicks || isRitualComplete) return;
 
         const stored = localStorage.getItem(APP_CONFIG.storageKey);
@@ -661,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleDrawer(!isOpen);
         } else if (e.key === 'Enter' || e.key === ' ') {
             // Trigger next wick (Single screen keyboard override helper)
-            const virtualLitCount = currentlyLitCount + lightingQueue.length + inFlightWicks.size;
+            const virtualLitCount = currentlyLitCount + lightingQueue.length;
             if (virtualLitCount < totalWicks && !isRitualComplete) {
                 singleScreenTriggerBtn.click();
             }

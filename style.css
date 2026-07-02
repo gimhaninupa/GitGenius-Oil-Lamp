@@ -213,29 +213,7 @@ body {
     animation: flicker-glow 0.1s infinite alternate;
 }
 
-/* --- TRAVELING SPARK & TRAILS --- */
-.traveling-spark {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    background: radial-gradient(circle, #fff 10%, var(--gold-bright) 50%, var(--flame-outer) 100%);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 20px #ff8c00, 0 0 40px #ff4500;
-    z-index: 999;
-}
 
-.spark-trail {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: var(--gold-bright);
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 8px var(--flame-mid);
-    z-index: 998;
-}
 
 
 
