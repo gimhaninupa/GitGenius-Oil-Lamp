@@ -269,6 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update litOverlay opacity dynamically to build illumination on the sides of the screen
         const targetOpacity = 0.2 + 0.8 * (currentlyLitCount / totalWicks);
         litOverlay.style.opacity = targetOpacity;
+        
+        const gateLeftLit = document.getElementById('gateLeftLit');
+        const gateRightLit = document.getElementById('gateRightLit');
+        if (gateLeftLit) gateLeftLit.style.opacity = targetOpacity;
+        if (gateRightLit) gateRightLit.style.opacity = targetOpacity;
 
         if (currentlyLitCount === 1) {
             altarDisk.classList.add('lit');
@@ -286,32 +291,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Power up all vault systems and central logo smoothly
         litOverlay.style.opacity = 1.0;
+        const gateLeftLit = document.getElementById('gateLeftLit');
+        const gateRightLit = document.getElementById('gateRightLit');
+        if (gateLeftLit) gateLeftLit.style.opacity = 1.0;
+        if (gateRightLit) gateRightLit.style.opacity = 1.0;
         altarDisk.classList.add('lit');
 
         // 2. Wait 2.5 seconds for the logo light-up effect, then split the gate!
         setTimeout(() => {
-            const mainDoor = document.getElementById('mainDoor');
-            if (mainDoor && !document.getElementById('rightDoor')) {
-                // Clone the door
-                const rightDoor = mainDoor.cloneNode(true);
-                rightDoor.id = 'rightDoor';
+            const gateLeft = document.getElementById('gateLeft');
+            const gateRight = document.getElementById('gateRight');
+            
+            if (gateLeft && gateRight) {
+                gateLeft.classList.add('open');
+                gateRight.classList.add('open');
                 
-                // Set precise masks to split them exactly down the middle (vertical line)
-                mainDoor.style.clipPath = 'polygon(0 0, 50% 0, 50% 100%, 0 100%)';
-                rightDoor.style.clipPath = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%)';
-                
-                // Add to DOM right after mainDoor
-                mainDoor.parentNode.insertBefore(rightDoor, mainDoor.nextSibling);
-                
-                // Trigger the CSS translation slide
-                // Use a tiny 50ms delay so the browser parses the DOM clone before animating
-                setTimeout(() => {
-                    mainDoor.classList.add('door-split-left');
-                    rightDoor.classList.add('door-split-right');
-                    
-                    // Reveal the deep background text
-                    document.getElementById('deepBackground').classList.add('reveal');
-                }, 50);
+                // Reveal the deep background text
+                document.getElementById('deepBackground').classList.add('reveal');
             }
         }, 2500);
     };
