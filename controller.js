@@ -253,17 +253,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Touch to Light Button
     const handleTrigger = () => {
-        if (isTriggerLocked) return;
-
         const litCount = litWicks.length;
         if (litCount >= maxWicks) return;
 
         // Find next unlit guest
         const nextGuestIndex = guests.findIndex(g => !g.lit);
         if (nextGuestIndex === -1) return;
-
-        // Lock trigger synchronously immediately to block double taps
-        isTriggerLocked = true;
 
         const guest = guests[nextGuestIndex];
         guest.lit = true;
@@ -286,19 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Particle effect on the controller button
         createBtnParticles();
 
-        // Temporarily disable the button to prevent double tap accident
-        triggerBtn.disabled = true;
-        triggerBtn.classList.remove('active');
-
         saveState();
         updateUI();
         renderGuests();
-
-        // Enable back after animation completes on display (approx 2.5 seconds)
-        setTimeout(() => {
-            isTriggerLocked = false;
-            updateUI();
-        }, 2500);
     };
 
     // Particle Burst on Button Touch
