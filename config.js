@@ -1,7 +1,7 @@
 // Virtual Oil Lamp - Central Configuration
 const APP_CONFIG = {
     // Total wicks to display on the oil lamp (typically 10)
-    totalWicks: 10,
+    totalWicks: 15,
 
     // Default list of guests who will light the wicks
     defaultGuests: [
