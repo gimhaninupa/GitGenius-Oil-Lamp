@@ -314,6 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Reveal the deep background text
                     document.getElementById('deepBackground').classList.add('reveal');
+                    
+                    // Play the finale video
+                    const finaleVideo = document.getElementById('finaleVideo');
+                    if (finaleVideo) {
+                        finaleVideo.play();
+                    }
                 }, 50);
             }
         }, 2500);
