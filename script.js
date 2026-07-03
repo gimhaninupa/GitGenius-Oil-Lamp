@@ -163,31 +163,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const audio = new SoundSynth();
 
-    // --- Mobile Unlock Overlay Logic ---
-    const unlockOverlay = document.getElementById('unlockOverlay');
-    if (unlockOverlay) {
-        unlockOverlay.addEventListener('click', () => {
-            // Unlock audio context
-            audio.init();
-            if (audio.ctx && audio.ctx.state === 'suspended') {
-                audio.ctx.resume();
-            }
-            
-            // Unlock video playback
-            const finaleVideo = document.getElementById('finaleVideo');
-            if (finaleVideo) {
-                finaleVideo.play().then(() => {
-                    finaleVideo.pause();
-                    finaleVideo.currentTime = 0;
-                }).catch(e => console.log("Video unlock failed:", e));
-            }
-            
-            // Hide and remove overlay
-            unlockOverlay.style.opacity = '0';
-            unlockOverlay.style.pointerEvents = 'none';
-            setTimeout(() => unlockOverlay.remove(), 500);
-        });
-    }
+    // --- Invisible Mobile Unlock Logic ---
+    // Unlocks media on the very first tap anywhere on the screen
+    const unlockMedia = () => {
+        audio.init();
+        if (audio.ctx && audio.ctx.state === 'suspended') {
+            audio.ctx.resume();
+        }
+        
+        const finaleVideo = document.getElementById('finaleVideo');
+        if (finaleVideo) {
+            finaleVideo.play().then(() => {
+                finaleVideo.pause();
+                finaleVideo.currentTime = 0;
+            }).catch(e => console.log("Video unlock failed:", e));
+        }
+        
+        // Remove listener after first interaction
+        document.body.removeEventListener('click', unlockMedia);
+        document.body.removeEventListener('touchstart', unlockMedia);
+    };
+    document.body.addEventListener('click', unlockMedia);
+    document.body.addEventListener('touchstart', unlockMedia, {passive: true});
     // --- Altar Construction ---
     const buildAltar = () => {
         lampsContainer.innerHTML = '';
