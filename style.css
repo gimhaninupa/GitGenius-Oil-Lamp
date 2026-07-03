@@ -873,6 +873,19 @@ body {
     align-items: center;
     flex: 1;
     padding: 30px 0;
+    position: relative;
+}
+
+.trigger-progress-ring {
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background: conic-gradient(var(--gold-bright) var(--progress, 0%), transparent 0);
+    -webkit-mask: radial-gradient(transparent 111px, black 112px);
+    mask: radial-gradient(transparent 111px, black 112px);
+    z-index: 0;
+    pointer-events: none;
 }
 
 .trigger-button {

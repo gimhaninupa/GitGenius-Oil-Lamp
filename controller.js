@@ -396,8 +396,60 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState(true, 'controller_finale');
     });
 
-    // Button event listeners
-    triggerBtn.addEventListener('click', handleTrigger);
+    // Button event listeners - Press and Hold Mechanic
+    let holdTimer = null;
+    let holdProgress = 0;
+    const HOLD_DURATION_MS = 2000;
+    const PROGRESS_INTERVAL = 20;
+    const progressRing = document.getElementById('triggerProgressRing');
+
+    const updateProgress = () => {
+        if (progressRing) {
+            const percentage = Math.min(100, (holdProgress / HOLD_DURATION_MS) * 100);
+            progressRing.style.setProperty('--progress', `${percentage}%`);
+        }
+    };
+
+    const startHold = (e) => {
+        if (e.cancelable) e.preventDefault();
+        if (triggerBtn.disabled) return;
+        if (holdTimer) clearInterval(holdTimer);
+        
+        holdProgress = 0;
+        updateProgress();
+
+        holdTimer = setInterval(() => {
+            holdProgress += PROGRESS_INTERVAL;
+            updateProgress();
+
+            if (holdProgress >= HOLD_DURATION_MS) {
+                clearInterval(holdTimer);
+                holdTimer = null;
+                setTimeout(() => {
+                    holdProgress = 0;
+                    updateProgress();
+                }, 500); // Wait a bit before clearing ring
+                handleTrigger();
+            }
+        }, PROGRESS_INTERVAL);
+    };
+
+    const stopHold = () => {
+        if (holdTimer) {
+            clearInterval(holdTimer);
+            holdTimer = null;
+            holdProgress = 0;
+            updateProgress();
+        }
+    };
+
+    triggerBtn.addEventListener('mousedown', startHold);
+    triggerBtn.addEventListener('touchstart', startHold, {passive: false});
+    
+    triggerBtn.addEventListener('mouseup', stopHold);
+    triggerBtn.addEventListener('mouseleave', stopHold);
+    triggerBtn.addEventListener('touchend', stopHold);
+    triggerBtn.addEventListener('touchcancel', stopHold);
 
     // Listen to changes from local storage (if display resets or other controller edits)
     window.addEventListener('storage', (e) => {
