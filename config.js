@@ -1,7 +1,7 @@
 // Virtual Oil Lamp - Central Configuration
 const APP_CONFIG = {
     // Total wicks to display on the oil lamp (typically 10)
-    totalWicks: 15,
+    totalWicks: 14,
 
     // Default list of guests who will light the wicks
     defaultGuests: [
@@ -14,7 +14,11 @@ const APP_CONFIG = {
         { name: "Miss Priyanthi Senanayake", title: "General Manager" },
         { name: "Mr. Dilhan Wickramasinghe", title: "Lead Engineer" },
         { name: "Prof. Malik Ranasinghe", title: "Academic Advisor" },
-        { name: "Mrs. Ishara Kaluarachchi", title: "COO" }
+        { name: "Mrs. Ishara Kaluarachchi", title: "COO" },
+        { name: "Dr. Nalin Perera", title: "Senior Consultant" },
+        { name: "Mr. Upul Bandara", title: "VP of Engineering" },
+        { name: "Mrs. Ruwani Silva", title: "CFO" },
+        { name: "Mr. Suresh Gunasena", title: "Executive Director" }
     ],
 
     // Sound effects settings
