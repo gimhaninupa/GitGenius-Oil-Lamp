@@ -1,7 +1,9 @@
 // Virtual Oil Lamp - Central Configuration
 const APP_CONFIG = {
     // Total wicks to display on the oil lamp (typically 10)
-    totalWicks: 14,
+    totalWicks: 18,
+    lampRadius: 334, // Adjust this value (or use Shift + Up/Down arrows in browser to tweak live)
+    lampCenterYOffset: 0, // Adjust this if the circle is slightly higher/lower (or use Alt + Up/Down arrows)
 
     // Default list of guests who will light the wicks
     defaultGuests: [

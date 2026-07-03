@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const deepBg = document.getElementById('deepBackground');
         if (deepBg) deepBg.classList.remove('reveal');
 
-        const center = { x: 400, y: 400 };
-        const radius = 334;
+        const center = { x: 400, y: 400 + (APP_CONFIG.lampCenterYOffset || 0) };
+        const radius = APP_CONFIG.lampRadius || 334;
 
         // Inject lamps dynamically based on configuration
         for (let i = 0; i < totalWicks; i++) {
@@ -542,6 +542,34 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('storage', (e) => {
         if (e.key === APP_CONFIG.storageKey) {
             syncLocalStorage();
+        }
+    });
+
+    // Developer Hotkeys for live tweaking
+    document.addEventListener('keydown', (e) => {
+        if (e.shiftKey && e.key === 'ArrowUp') {
+            APP_CONFIG.lampRadius += 2;
+            buildAltar();
+            console.log("New Radius:", APP_CONFIG.lampRadius);
+            e.preventDefault();
+        }
+        if (e.shiftKey && e.key === 'ArrowDown') {
+            APP_CONFIG.lampRadius -= 2;
+            buildAltar();
+            console.log("New Radius:", APP_CONFIG.lampRadius);
+            e.preventDefault();
+        }
+        if (e.altKey && e.key === 'ArrowUp') {
+            APP_CONFIG.lampCenterYOffset -= 2;
+            buildAltar();
+            console.log("New Y Offset:", APP_CONFIG.lampCenterYOffset);
+            e.preventDefault();
+        }
+        if (e.altKey && e.key === 'ArrowDown') {
+            APP_CONFIG.lampCenterYOffset += 2;
+            buildAltar();
+            console.log("New Y Offset:", APP_CONFIG.lampCenterYOffset);
+            e.preventDefault();
         }
     });
 

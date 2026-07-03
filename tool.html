@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Radius</title>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <div id="output"></div>
+    <script>
+        const img = new Image();
+        img.src = 'bg_lit.png';
+        img.onload = () => {
+            const canvas = document.getElementById('c');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            
+            // center is 960, 540
+            const cx = 960;
+            const cy = 540;
+            
+            let sumRadius = 0;
+            let count = 0;
+            
+            for (let y = 0; y < canvas.height; y++) {
+                for (let x = 0; x < canvas.width; x++) {
+                    const i = (y * canvas.width + x) * 4;
+                    const r = data[i];
+                    const g = data[i+1];
+                    const b = data[i+2];
+                    
+                    // Look for bright orange/yellow pixels (flame color)
+                    if (r > 200 && g > 150 && b < 100) {
+                        const dist = Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2));
+                        // Ignore center logo
+                        if (dist > 150 && dist < 500) {
+                            sumRadius += dist;
+                            count++;
+                        }
+                    }
+                }
+            }
+            
+            const avgRadius = count > 0 ? sumRadius / count : 0;
+            document.getElementById('output').textContent = 'Estimated Radius: ' + avgRadius + ' (from ' + count + ' pixels)';
+        };
+    </script>
+</body>
+</html>
