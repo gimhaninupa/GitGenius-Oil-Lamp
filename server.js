@@ -100,7 +100,9 @@ function handleWebSocketHandshake(req, socket) {
     });
 
     socket.on('error', (err) => {
-        console.error("Socket error:", err.message);
+        if (err.code !== 'EPIPE' && err.code !== 'ECONNRESET') {
+            console.error("Socket error:", err.message);
+        }
         clients.delete(socket);
     });
 }
