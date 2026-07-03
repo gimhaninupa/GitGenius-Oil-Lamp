@@ -18,11 +18,12 @@ const MIME_TYPES = {
     '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
     '.svg': 'image/svg+xml',
-    '.ico': 'image/x-icon'
+    '.ico': 'image/x-icon',
+    '.mp4': 'video/mp4'
 };
 
 const server = http.createServer((req, res) => {
-    let filePath = '.' + req.url;
+    let filePath = '.' + decodeURIComponent(req.url);
     if (filePath === './' || filePath === './index') {
         filePath = './index.html';
     }
