@@ -63,7 +63,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // If in WebSocket mode, send update
         if (isConnected && ws && ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({ type: 'sync_state', state }));
+            // Compress state for WebSocket to avoid 4KB frame limits
+            const wsState = {
+                c: litWicks.length,
+                w: litWicks.map(w => w.wickIndex),
+                g: guests.map(g => ({
+                    i: g.id,
+                    n: g.name,
+                    t: g.title,
+                    l: g.lit ? 1 : 0,
+                    w: g.wickIndex
+                })),
+                ts: Date.now(),
+                o: origin
+            };
+            ws.send(JSON.stringify({ type: 'sync_state', state: wsState }));
         }
     };
 
@@ -97,8 +111,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (msg.type === 'sync_state') {
                     // Update our local state with the network state
                     if (msg.state) {
-                        guests = msg.state.guests || [];
-                        litWicks = msg.state.litWicks || [];
+                        const s = msg.state;
+                        if (s.g) {
+                            guests = s.g.map(g => ({
+                                id: g.i,
+                                name: g.n,
+                                title: g.t,
+                                lit: g.l === 1,
+                                wickIndex: g.w
+                            }));
+                            litWicks = (s.w || []).map(wickIndex => {
+                                const guest = guests.find(g => g.wickIndex === wickIndex);
+                                return {
+                                    wickIndex: wickIndex,
+                                    name: guest ? guest.name : '',
+                                    title: guest ? guest.title : '',
+                                    timestamp: s.ts
+                                };
+                            });
+                        } else {
+                            guests = s.guests || [];
+                            litWicks = s.litWicks || [];
+                        }
                         renderGuests();
                         updateUI();
                     }

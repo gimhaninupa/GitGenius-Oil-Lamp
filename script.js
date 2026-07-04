@@ -521,7 +521,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = JSON.parse(event.data);
 
                 if (data.type === 'sync_state' && data.state) {
-                    syncDisplayState(data.state);
+                    let stateObj = data.state;
+                    // Decompress if it's the minified WS format
+                    if (stateObj.g) {
+                        stateObj = {
+                            litCount: stateObj.c,
+                            origin: stateObj.o,
+                            timestamp: stateObj.ts,
+                            guests: stateObj.g.map(g => ({
+                                id: g.i,
+                                name: g.n,
+                                title: g.t,
+                                lit: g.l === 1,
+                                wickIndex: g.w
+                            }))
+                        };
+                        stateObj.litWicks = (data.state.w || []).map(wickIndex => {
+                            const guest = stateObj.guests.find(g => g.wickIndex === wickIndex);
+                            return {
+                                wickIndex: wickIndex,
+                                name: guest ? guest.name : '',
+                                title: guest ? guest.title : '',
+                                timestamp: stateObj.timestamp
+                            };
+                        });
+                    }
+                    syncDisplayState(stateObj);
                 }
             } catch (err) {
                 console.error("Error handling websocket payload:", err);

@@ -8,7 +8,7 @@ const APP_CONFIG = {
     // Default list of guests who will light the wicks
     defaultGuests: [
         { name: "Mrs. Warunika Hippola", title: "Branch Academic Advisor, IEEE Student Branch of SLTC" },
-        { name: "Dr. Chameera De Silva", title: "Head – Department of Data Science, Sri Lanka Technology Campus" },
+        { name: "Dr. Chameera De Silva", title: "Head of The Department of Data Science, Sri Lanka Technology Campus" },
         { name: "Mr. Nisal Gunawardhana", title: "GitHub Campus Expert, Associate Software Engineer @ Olee AI, Gold Microsoft Student Ambassadors" },
         { name: "Mr. Dineth Siriwardana", title: "Mobile Engineer @ Majstro, Community Lead @ Microsoft IT pro community, Ex Gold Microsoft Student ambassador" },
         { name: "Mr. Kavindu Umayanga", title: "Microsoft Student Ambassador, Community Lead @ Microsoft IT pro Community" },
