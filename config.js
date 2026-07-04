@@ -7,24 +7,24 @@ const APP_CONFIG = {
 
     // Default list of guests who will light the wicks
     defaultGuests: [
-        { name: "Mrs. Warunika Hippola", title: "Branch Academic Advisor, IEEE Student Branch of SLTC" },
         { name: "Dr. Chameera De Silva", title: "Head of The Department of Data Science, Sri Lanka Technology Campus" },
-        { name: "Mr. Nisal Gunawardhana", title: "GitHub Campus Expert, Associate Software Engineer @ Olee AI, Gold Microsoft Student Ambassadors" },
-        { name: "Mr. Dineth Siriwardana", title: "Mobile Engineer @ Majstro, Community Lead @ Microsoft IT pro community, Ex Gold Microsoft Student ambassador" },
-        { name: "Mr. Kavindu Umayanga", title: "Microsoft Student Ambassador, Community Lead @ Microsoft IT pro Community" },
+        { name: "Mr. Nisal Gunawardhana", title: "GitHub Campus Expert, Associate Software Engineer at Olee AI, Gold Microsoft Student Ambassadors" },
+        { name: "Mr. Dineth Siriwardana", title: "Mobile Engineer at Majstro, Community Lead at Microsoft IT pro community, Ex Gold Microsoft Student ambassador" },
+        { name: "Mr. Kavindu Umayanga", title: "Microsoft Student Ambassador, Community Lead at Microsoft IT pro Community" },
         { name: "Mr. Induwara Lakdinu", title: "Webmaster, IEEE Student Branch Chapter of SLTC" },
         { name: "Ms. Zahra Ismail", title: "Chairperson, IEEE WIE Student Branch Affinity Group of SLTC" },
         { name: "Ms. Vimarshana Kithmini", title: "Chairperson, IEEE Computer Society Student Branch Chapter of SLTC" },
         { name: "Mr. Geeth Rangika", title: "Vice Chairperson, IEEE Computer Society Student Branch Chapter of SLTC" },
         { name: "Ms. Dureksha Arangala", title: "Secretary, IEEE Computer Society Student Branch Chapter of SLTC" },
         { name: "Ms. Chalani Kavindya", title: "Assistant Secretary, IEEE Computer Society Student Branch Chapter of SLTC" },
-        { name: "Ms. Ridmika Yohani", title: "Treasurer, IEEE Computer Society Student Branch Chapter of SLTC" },
-        { name: "Ms. Irushi Perera", title: "Assistant Treasurer, IEEE Computer Society Student Branch Chapter of SLTC" },
         { name: "Mr. Binara Yasas", title: "Webmaster, IEEE Computer Society Student Branch Chapter of SLTC" },
-        { name: "Mr. Thamindu Kavinda", title: "Assistant Webmaster, IEEE Computer Society Student Branch Chapter of SLTC" },
         { name: "Mr. Eshan Menuka", title: "Project Co-chairperson, GitGenius 2026" },
         { name: "Mr. Saneth Rasanjana", title: "Project Co-chairperson, GitGenius 2026" },
-        { name: "Ms. Omaya Nayagara", title: "Project Secretary, GitGenius 2026" }
+        { name: "Ms. Omaya Nayagara", title: "Project Secretary, GitGenius 2026" },
+        { name: "Participant", title: "One member of the participants please come forward to light the oil lamp" },
+        { name: "Guest 1", title: "Participant" },
+        { name: "Guest 2", title: "Participant" },
+        { name: "Guest 3", title: "Participant" }
     ],
 
     // Sound effects settings
