@@ -91,9 +91,21 @@ function handleWebSocketHandshake(req, socket) {
     // Track client socket
     clients.add(socket);
 
+    let clientBuffer = Buffer.alloc(0);
+
     // Socket message handlers
-    socket.on('data', (buffer) => {
-        decodeWebSocketFrame(socket, buffer);
+    socket.on('data', (chunk) => {
+        clientBuffer = Buffer.concat([clientBuffer, chunk]);
+        
+        let remaining = clientBuffer;
+        while (remaining.length > 0) {
+            const consumed = decodeWebSocketFrame(socket, remaining);
+            if (consumed === 0) {
+                break; // Not enough data for a complete frame yet
+            }
+            remaining = remaining.slice(consumed);
+        }
+        clientBuffer = remaining;
     });
 
     socket.on('close', () => {
@@ -109,7 +121,7 @@ function handleWebSocketHandshake(req, socket) {
 }
 
 function decodeWebSocketFrame(socket, buffer) {
-    if (buffer.length < 2) return;
+    if (buffer.length < 2) return 0;
 
     let offset = 0;
     const firstByte = buffer.readUInt8(offset++);
@@ -120,28 +132,26 @@ function decodeWebSocketFrame(socket, buffer) {
     if (opcode === 8) {
         clients.delete(socket);
         socket.destroy();
-        return;
+        return buffer.length;
     }
-
-    // We only process text frames (opcode 1)
-    if (opcode !== 1) return;
 
     const secondByte = buffer.readUInt8(offset++);
     const isMasked = (secondByte & 0x80) !== 0;
     let payloadLen = secondByte & 0x7f;
 
     if (payloadLen === 126) {
-        if (buffer.length < 4) return;
+        if (buffer.length < offset + 2) return 0;
         payloadLen = buffer.readUInt16BE(offset);
         offset += 2;
     } else if (payloadLen === 127) {
-        if (buffer.length < 10) return;
+        if (buffer.length < offset + 8) return 0;
         // Ignore upper 4 bytes for simple offsets
         payloadLen = buffer.readUInt32BE(offset + 4);
         offset += 8;
     }
 
-    if (buffer.length < offset + (isMasked ? 4 : 0) + payloadLen) return;
+    const totalFrameLength = offset + (isMasked ? 4 : 0) + payloadLen;
+    if (buffer.length < totalFrameLength) return 0;
 
     let maskingKey;
     if (isMasked) {
@@ -150,18 +160,24 @@ function decodeWebSocketFrame(socket, buffer) {
     }
 
     const rawPayload = buffer.slice(offset, offset + payloadLen);
-    let message = '';
-
-    if (isMasked && maskingKey) {
-        for (let i = 0; i < rawPayload.length; i++) {
-            message += String.fromCharCode(rawPayload[i] ^ maskingKey[i % 4]);
+    
+    // Only process text frames (opcode 1)
+    if (opcode === 1) {
+        let message = '';
+        if (isMasked && maskingKey) {
+            for (let i = 0; i < rawPayload.length; i++) {
+                message += String.fromCharCode(rawPayload[i] ^ maskingKey[i % 4]);
+            }
+        } else {
+            message = rawPayload.toString('utf8');
         }
-    } else {
-        message = rawPayload.toString('utf8');
+        handleClientMessage(socket, message);
     }
 
-    handleClientMessage(socket, message);
+    return totalFrameLength;
 }
+
+
 
 function encodeWebSocketFrame(message) {
     const payload = Buffer.from(message, 'utf8');
